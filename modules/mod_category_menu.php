@@ -23,10 +23,9 @@ if( !empty( $gContent->mContentId ) ) {
 		}
 		if( $pigeons = $pigeonholes->getPigeonholesFromContentId( $gContent->mContentId ) ) {
 			foreach( $pigeons as $pigeon ) {
-				$modPigeonStructures[] = $gStructure->getSubTree( $pigeon['root_structure_id'], TRUE );
+				$modPigeonStructures[] = $gStructure->getSubTree( $pigeon['root_structure_id'], true );
 			}
-			$_template->tpl_vars['modPigeonStructures'] = new Smarty_variable( !empty( $modPigeonStructures );
+			$gBitSmarty->assign( 'modPigeonStructures', !empty( $modPigeonStructures ));
 		}
 	}
 }
-?>

@@ -21,11 +21,10 @@ if( !empty( $gContent->mContentId ) ) {
 		if( $pigeons = $pigeonholes->getPigeonholesFromContentId( $gContent->mContentId ) ) {
 			foreach( $pigeons as $pigeon ) {
 				$pigeonholes->mContentId = $pigeon['content_id'];
-				$pigeonholes->load( TRUE );
+				$pigeonholes->load( true );
 				$modRelatedPigeon[] = $pigeonholes->mInfo;
 			}
-			$_template->tpl_vars['modRelatedPigeon'] = new Smarty_variable( !empty( $modRelatedPigeon );
+			$gBitSmarty->assign( 'modRelatedPigeon', !empty( $modRelatedPigeon ) );
 		}
 	}
 }
-?>

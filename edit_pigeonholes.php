@@ -16,19 +16,20 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_create' );
 
-include_once( LIBERTY_PKG_CLASS_PATH.'LibertyStructure.php' );
-include_once( PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php' );
+use Bitweaver\Pigeonholes\Pigeonholes;
+use Bitweaver\Liberty\LibertyStructure;
+include_once PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php';
 
 // include edit structure file only when structure_id is known
 if( !empty( $_REQUEST["structure_id"] ) && ( empty( $_REQUEST['action'] ) || $_REQUEST['action'] != 'remove' ) ) {
 	$verifyStructurePermission = 'p_pigeonholes_create';
-	$noAjaxContent = TRUE;
-	include_once( LIBERTY_PKG_INCLUDE_PATH.'structure_edit_inc.php' );
+	$noAjaxContent = true;
+	include_once LIBERTY_PKG_INCLUDE_PATH.'structure_edit_inc.php';
 
 	// get all the nodes in this structure
 	foreach( $rootTree as $node ) {
@@ -45,9 +46,9 @@ if( !empty( $_REQUEST['pigeonhole_store'] ) ) {
 	}
 
 	// we need to get the root structure id
-	$_REQUEST['pigeonhole']['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
+	$_REQUEST['pigeonhole']['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : null;
 	// store the pigeonhole
-	$pigeonStore = new Pigeonholes( NULL, !empty( $_REQUEST['pigeonhole_content_id'] ) ? $_REQUEST['pigeonhole_content_id'] : NULL );
+	$pigeonStore = new Pigeonholes( null, !empty( $_REQUEST['pigeonhole_content_id'] ) ? $_REQUEST['pigeonhole_content_id'] : null );
 	$pigeonStore->load();
 	if( $pigeonStore->store( $_REQUEST['pigeonhole'] )) {
 		header( "Location: ".$_SERVER['SCRIPT_NAME'].'?structure_id='.$pigeonStore->mStructureId.( !empty( $_REQUEST['action'] ) ? '&action='.$_REQUEST['action'] : '' )."&success=".urlencode( tra( "The category was successfully stored" ) ) );
@@ -64,19 +65,19 @@ if( !empty( $_REQUEST['action'] ) || isset( $_REQUEST["confirm"] ) ) {
 	}
 
 	if( $_REQUEST['action'] == 'edit' || $_REQUEST['action'] == 'create' ) {
-		$gBitSmarty->assign( 'pigeonInfo', !empty( $pigeonInfo ) ? $pigeonInfo : NULL );
+		$gBitSmarty->assign( 'pigeonInfo', !empty( $pigeonInfo ) ? $pigeonInfo : null );
 	}
 
 	if( $_REQUEST["action"] == 'remove' || isset( $_REQUEST["confirm"] ) ) {
 		if( isset( $_REQUEST["confirm"] ) ) {
-			if( $gContent->expunge( $_REQUEST["structure_id"] ) ) {
+			if( $gContent->expunge() ) {
 				bit_redirect( $_SERVER['SCRIPT_NAME'].'?structure_id='.$gContent->mInfo["parent_id"] );
 			} else {
 				$feedback['error'] = $gContent->mErrors;
 			}
 		}
 		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
-		$formHash['remove'] = TRUE;
+		$formHash['remove'] = true;
 		$formHash['structure_id'] = $_REQUEST['structure_id'];
 		$formHash['action'] = 'remove';
 		$msgHash = array(
@@ -108,11 +109,7 @@ if( !empty( $_REQUEST['success'] ) ) {
 
 // get all available perms only when the admin is visiting here.
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
-	if( $gBitUser->isAdmin() ) {
-		$tmpPerms = $gBitUser->getGroupPermissions();
-	} else {
-		$tmpPerms = $gBitUser->mPerms;
-	}
+	$tmpPerms = $gBitUser->isAdmin() ? $gBitUser->getGroupPermissions() : $gBitUser->mPerms;
 
 	$perms[''] = tra( 'None' );
 	foreach( $tmpPerms as $perm => $info ) {
@@ -124,7 +121,7 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
 // get available groups ready that we can assign the pigoenhole to one of them
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
 	$listHash = array(
-		'only_root_groups' => TRUE,
+		'only_root_groups' => true,
 		'sort_mode' => !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'group_name_asc'
 	);
 	$allGroups = $gBitUser->getAllGroups( $listHash );
@@ -138,17 +135,17 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
 }
 
 $listHash = array(
-	'root_structure_id' => !empty( $gContent->mInfo['root_structure_id'] ) ? $gContent->mInfo['root_structure_id'] : NULL,
-	'force_extras'      => TRUE,
+	'root_structure_id' => !empty( $gContent->mInfo['root_structure_id'] ) ? $gContent->mInfo['root_structure_id'] : null,
+	'force_extras'      => true,
 	'max_records'       => -1
 );
 $pigeonList = $gContent->getList( $listHash );
 $gBitSmarty->assign( 'pigeonList', $pigeonList );
-$gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
+$gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : null );
 
 // Get list of available styles
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_themes' ) ) {
-	$styles = $gBitThemes->getStyles( NULL, TRUE );
+	$styles = $gBitThemes->getStyles( null, true );
 	$gBitSmarty->assign( 'styles', $styles );
 }
 
@@ -158,4 +155,3 @@ if ( !empty( $gStructure ) ) {
 } else {
 	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', tra( 'Create Pigeonhole' ) , array( 'display_mode' => 'edit' ));
 }
-?>

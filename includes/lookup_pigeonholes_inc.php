@@ -15,9 +15,8 @@
  * Required Files
  */
 // include service functions
-require_once( PIGEONHOLES_PKG_CLASS_PATH.'Pigeonholes.php' );
+use Bitweaver\Pigeonholes;
 
 $gContent = new Pigeonholes( ( !empty( $_REQUEST['structure_id'] ) ? $_REQUEST['structure_id'] : NULL ), ( !empty( $_REQUEST['content_id'] ) ? $_REQUEST['content_id'] : NULL ) );
 $gContent->load( TRUE );
-$gBitSmarty->assignByRef( 'gContent', $gContent );
-?>
+$gBitSmarty->assign( 'gContent', $gContent );

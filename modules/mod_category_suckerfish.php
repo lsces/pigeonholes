@@ -20,17 +20,17 @@ global $gBitSmarty, $gQueryUserId, $gBitThemes, $module_rows, $moduleParams, $gB
 $module_rows = $moduleParams['module_rows'];
 $module_params = $moduleParams['module_params'];
 
-$_template->tpl_vars['moduleTitle'] = new Smarty_variable( isset($moduleParams['title']) );
+$gBitSmarty->assign( 'moduleTitle', isset($moduleParams['title']) );
 
-$ns = array();
+$ns = [];
 if($gBitSystem->isPackageActive('pigeonholes')) {
-	require_once(PIGEONHOLES_PKG_CLASS_PATH.'Pigeonholes.php');
+	require_once(PIGEONHOLES_PKG_PATH.'Pigeonholes.php');
 
 	$p = new Pigeonholes();
 	$s = new LibertyStructure();
 
 	// Prep get list screws with us.
-	$listHash = array('load_only_root'=> TRUE, 'sort_mode' => 'lc.title_asc', 'offset' => 0, 'max_records' => '999999', 'find' => '');
+	$listHash = array('load_only_root'=> true, 'sort_mode' => 'lc.title_asc', 'offset' => 0, 'max_records' => '999999', 'find' => '');
 	if (!empty($module_params['root_structure_id'])) {
 	  $listHash['root_structure_id'] = $module_params['root_structure_id'];
 	}
@@ -42,7 +42,7 @@ if($gBitSystem->isPackageActive('pigeonholes')) {
 	}
 	foreach ($l as $e) {
 		$d = $s->getSubTree( $e['structure_id'] );
-		$d_o = array();
+		$d_o = [];
 		foreach ($d as $c) {
 			$pos_var = &$d_o;
 			if($c['level']!=0) {
@@ -50,16 +50,16 @@ if($gBitSystem->isPackageActive('pigeonholes')) {
 				$pos_var = &$d_o;
 				foreach ($pos as $pos_v) {
 					if (!isset($pos_var['children'])) {
-						$pos_var['children']=array();
+						$pos_var['children']=[];
 					}
 					if (!isset($pos_var['children'][$pos_v-1])) {
-						$pos_var['children'][$pos_v-1]=array();
+						$pos_var['children'][$pos_v-1]=[];
 					}
 					$pos_var = &$pos_var['children'][$pos_v-1];
 				}
 			}
 			if (empty($pos_var['data'])) {
-				$pos_var['children']=array();
+				$pos_var['children']=[];
 				$c['display_url']=$p->getDisplayUrl($c['content_id']);
 				$pos_var['data']=$c;
 			}
@@ -105,15 +105,15 @@ if (!defined('MENU_LEVELS_DEFINED')) {
 
 if (!empty($module_params['expand_root']) && $module_params['expand_root']) {
 	if (isset($ns[0]) && !empty($ns[0]['children'])) {
-        	$_template->tpl_vars['pigeonMenu'] = new Smarty_variable( menuLevels($ns[0]['children'], 0));
+        	$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns[0]['children'], 0));
 	}
 	else if (!empty($ns[0]['children'])) {
-        	$_template->tpl_vars['pigeonMenu'] = new Smarty_variable( menuLevels($ns['children'], 0));
+        	$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns['children'], 0));
 	}
 }
 else {
-	$_template->tpl_vars['pigeonMenu'] = new Smarty_variable( menuLevels($ns, 0));
+	$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns, 0));
 }
 
-$_template->tpl_vars['pigeonholesPackageActive'] = new Smarty_variable( $gBitSystem->isPackageActive('pigeonholes'));
+$gBitSmarty->assign( 'pigeonholesPackageActive', $gBitSystem->isPackageActive('pigeonholes'));
 ?>

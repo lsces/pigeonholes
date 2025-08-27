@@ -7,19 +7,28 @@
  */
 global $gBitSystem, $gBitUser, $gLibertySystem;
 
-$registerHash = array(
+$pRegisterHash = [
 	'package_name' => 'pigeonholes',
 	'package_path' => dirname( dirname( __FILE__ ) ).'/',
 	'service' => LIBERTY_SERVICE_CATEGORIZATION,
-);
-$gBitSystem->registerPackage( $registerHash );
+];
+
+// fix to quieten down VS Code which can't see the dynamic creation of these ...
+define( 'PIGEONHOLES_PKG_NAME', $pRegisterHash['package_name'] );
+define( 'PIGEONHOLES_PKG_URL', BIT_ROOT_URL . basename( $pRegisterHash['package_path'] ) . '/' );
+define( 'PIGEONHOLES_PKG_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/' );
+define( 'PIGEONHOLES_PKG_INCLUDE_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/'); 
+define( 'PIGEONHOLES_PKG_CLASS_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/classes/');
+define( 'PIGEONHOLES_PKG_ADMIN_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/admin/'); 
+
+$gBitSystem->registerPackage( $pRegisterHash );
 
 define( 'PIGEONHOLES_CONTENT_TYPE_GUID', 'pigeonholes' );
 
 if( $gBitSystem->isPackageActive( 'pigeonholes' )) {
 
 	$tpl = $gBitSystem->isFeatureActive( 'pigeonholes_use_jstab' ) ? 'tab' : 'mini';
-	$gLibertySystem->registerService( LIBERTY_SERVICE_CATEGORIZATION, PIGEONHOLES_PKG_NAME, array(
+	$gLibertySystem->registerService( LIBERTY_SERVICE_CATEGORIZATION, PIGEONHOLES_PKG_NAME, [
 		// functions
 		'content_display_function'  => 'pigeonholes_content_display',
 		'content_preview_function'  => 'pigeonholes_content_preview',
@@ -34,15 +43,14 @@ if( $gBitSystem->isPackageActive( 'pigeonholes' )) {
 		'content_view_tpl'          => 'bitpackage:pigeonholes/service_view_members_inc.tpl',
 		'content_nav_tpl'           => 'bitpackage:pigeonholes/service_nav_path_inc.tpl',
 		'content_list_options_tpl'  => 'bitpackage:pigeonholes/service_list_options_inc.tpl',
-	));
+	] );
 
 	if( $gBitUser->hasPermission( 'p_pigeonholes_view' )) {
-		$menuHash = array(
+		$menuHash = [
 			'package_name'  => PIGEONHOLES_PKG_NAME,
 			'index_url'     => PIGEONHOLES_PKG_URL.'index.php',
 			'menu_template' => 'bitpackage:pigeonholes/menu_pigeonholes.tpl',
-		);
+		];
 		$gBitSystem->registerAppMenu( $menuHash );
 	}
 }
-?>

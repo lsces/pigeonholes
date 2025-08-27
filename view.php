@@ -16,7 +16,7 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_view' );
@@ -28,11 +28,11 @@ if (isset($_REQUEST['structure_id'])) {
 	header("Location:".$gContent->getDisplayUrl());
 }
 
-$gBitSmarty->assignByRef( 'memberFeedback', $memberFeedback = array() );
+$gBitSmarty->assign( 'memberFeedback', $memberFeedback = [] );
 
 // set up structure related stuff
 global $gStructure;
-if( !@BitBase::verifyId( $gContent->mInfo['root_structure_id'] ) ) {
+if( !BitBase::verifyId( $gContent->mInfo['root_structure_id'] ) ) {
 	header( "Location:".PIGEONHOLES_PKG_URL."list.php" );
 }
 
@@ -55,7 +55,7 @@ if( empty( $gStructure ) || !$gStructure->isValid() ) {
 	$gBitSystem->fatalError( tra( 'Invalid structure' ));
 }
 
-$gBitSmarty->assignByRef( 'gStructure', $gStructure );
+$gBitSmarty->assign( 'gStructure', $gStructure );
 $gBitSmarty->assign( 'structureInfo', $gStructure->mInfo );
 $gBitSmarty->assign( 'subtree', $gStructure->getSubTree( $gStructure->mStructureId ) );
 
@@ -63,9 +63,9 @@ if( $gContent->checkPathPermissions( $gContent->getField( 'path' ) ) ) {
 	$listHash = array(
 		'root_structure_id'   => $gContent->mInfo['root_structure_id'],
 		'structure_id'        => $gContent->mInfo['structure_id'],
-		'parse_data'          => TRUE,
+		'parse_data'          => true,
 		'max_records'         => -1,
-		'load_extras'         => TRUE,
+		'load_extras'         => true,
 		'members_max_records' => -1,
 	);
 	$pigeonList = $gContent->getList( $listHash );

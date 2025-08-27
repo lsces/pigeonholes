@@ -19,9 +19,9 @@ $gBitSystem->verifyPermission( 'p_pigeonholes_view' );
 include_once( PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php' );
 
 $listHash = &$_REQUEST;
-$listHash['load_only_root'] = TRUE;
+$listHash['load_only_root'] = true;
 $listHash['sort_mode'] = !empty( $listHash['sort_mode'] ) ? $listHash['sort_mode'] : 'title_asc';
-$listHash['parse_data'] = TRUE;
+$listHash['parse_data'] = true;
 $pigeonList = $gContent->getList( $listHash );
 
 // set up structure related stuff

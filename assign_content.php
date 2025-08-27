@@ -16,7 +16,7 @@
 /**
  * required setup
  */
-require_once( '../kernel/includes/setup_inc.php' );
+require_once '../kernel/includes/setup_inc.php';
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_insert_member' );
@@ -24,7 +24,7 @@ $gBitSystem->verifyPermission( 'p_pigeonholes_insert_member' );
 include_once( PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php' );
 
 $feedback = '';
-$gBitSmarty->assignByRef( 'feedback', $feedback );
+$gBitSmarty->assign( 'feedback', $feedback );
 
 $contentTypes = array( '' => tra( 'All Content' ) );
 foreach( $gLibertySystem->mContentTypes as $cType ) {
@@ -33,13 +33,13 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 	}
 }
 $gBitSmarty->assign( 'contentTypes', $contentTypes );
-$gBitSmarty->assign( 'contentSelect', $contentSelect = !isset( $_REQUEST['content_type'] ) ? NULL : $_REQUEST['content_type'] );
+$gBitSmarty->assign( 'contentSelect', $contentSelect = !isset( $_REQUEST['content_type'] ) ? null : $_REQUEST['content_type'] );
 
 $listHash = array(
-	'find' => ( empty( $_REQUEST['find'] ) ? NULL : $_REQUEST['find'] ),
-	'sort_mode' => ( empty( $_REQUEST['sort_mode'] ) ? NULL : $_REQUEST['sort_mode'] ),
-	'max_records' => ( @BitBase::verifyId( $_REQUEST['max_records'] ) ) ? $_REQUEST['max_records'] : 10,
-	'include_members' => ( ( !empty( $_REQUEST['include'] ) && $_REQUEST['include'] == 'members' ) ? TRUE : FALSE ),
+	'find' => ( empty( $_REQUEST['find'] ) ? null : $_REQUEST['find'] ),
+	'sort_mode' => ( empty( $_REQUEST['sort_mode'] ) ? null : $_REQUEST['sort_mode'] ),
+	'max_records' => ( BitBase::verifyId( $_REQUEST['max_records'] ) ) ? $_REQUEST['max_records'] : 10,
+	'include_members' => ( ( !empty( $_REQUEST['include'] ) && $_REQUEST['include'] == 'members' ) ? true : false ),
 	'content_type' => $contentSelect,
 );
 
@@ -47,15 +47,15 @@ $listHash = array(
 if( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_and_next'] )) {
 	$listHash['list_page'] = ( empty( $_REQUEST['list_page'] ) ? 2 : $_REQUEST['list_page'] + 1 );
 } else {
-	$listHash['list_page'] = ( empty( $_REQUEST['list_page'] ) ? NULL : $_REQUEST['list_page'] );
+	$listHash['list_page'] = ( empty( $_REQUEST['list_page'] ) ? null : $_REQUEST['list_page'] );
 }
 
 $assignableContent = $gContent->getAssignableContent( $listHash );
 
 if(( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_and_next'] ))) {
 	// here we need to limit all killing to the selected structure
-	$deletableParentIds = array();
-	if( empty( $gStructure ) && @BitBase::verifyId( $_REQUEST['root_structure_id'] ) ) {
+	$deletableParentIds = [];
+	if( empty( $gStructure ) && BitBase::verifyId( $_REQUEST['root_structure_id'] ) ) {
 		$gStructure = new LibertyStructure();
 		$struct = $gStructure->getStructure( $_REQUEST );
 		foreach( $struct as $node ) {
@@ -101,30 +101,30 @@ if(( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_
 	$assignableContent = $gContent->getAssignableContent( $listHash );
 }
 
-$gBitSmarty->assignByRef( 'listInfo', $listHash['listInfo'] );
+$gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 
 $listHash = array(
-	'load_only_root' => TRUE,
+	'load_only_root' => true,
 	'max_records' => -1,
-	'parse_data' => TRUE,
+	'parse_data' => true,
 );
 $pigeonRootData = $gContent->getList( $listHash );
 $pigeonRoots[0] = 'All';
 foreach( $pigeonRootData as $root ) {
 	$pigeonRoots[$root['root_structure_id']] = $root['title'];
 }
-$gBitSmarty->assign( 'pigeonRoots', !empty( $pigeonRoots ) ? $pigeonRoots : NULL );
+$gBitSmarty->assign( 'pigeonRoots', !empty( $pigeonRoots ) ? $pigeonRoots : null );
 
 $listHash = array(
-	'root_structure_id' => ( !empty( $_REQUEST['root_structure_id'] ) ? $_REQUEST['root_structure_id'] : NULL ),
-	'force_extras' => TRUE,
+	'root_structure_id' => ( !empty( $_REQUEST['root_structure_id'] ) ? $_REQUEST['root_structure_id'] : null ),
+	'force_extras' => true,
 	'max_records' => -1,
 	'sort_mode' => 'ls.`parent_id_asc`',
-	'parse_data' => TRUE,
+	'parse_data' => true,
 );
 
 if( $gBitSystem->isFeatureActive( 'pigeonholes_allow_forbid_insertion' )) {
-	$listHash['insertable'] = TRUE;
+	$listHash['insertable'] = true;
 }
 
 $pigeonList = $gContent->getList( $listHash );
