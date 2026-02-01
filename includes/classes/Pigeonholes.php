@@ -26,6 +26,7 @@
  */
 namespace Bitweaver\Pigeonholes;
 use Bitweaver\BitBase;
+use Bitweaver\KernelTools;
 use Bitweaver\Liberty\LibertyContent;
 use Bitweaver\Liberty\LibertyMime;
 use Bitweaver\Liberty\LibertyStructure;
@@ -39,15 +40,15 @@ use Bitweaver\Users\RoleUser;
 class Pigeonholes extends LibertyMime {
 	/**
 	* initiate class
-	* @param $pContentId content id of the pigeonhole - use either one of the ids.
-	* @param $pStructureId structure id of the pigeonhole - use either one of the ids.
-	* @param $pMembersList hash with optional values to tweak the getMemberList loading sql. Used keys are Order, Select, Join and Where.
+	* @param int $pContentId content id of the pigeonhole - use either one of the ids.
+	* @param int $pStructureId structure id of the pigeonhole - use either one of the ids.
+	* @param array $pMembersList hash with optional values to tweak the getMemberList loading sql. Used keys are Order, Select, Join and Where.
 	* @return void
 	**/
 
 	public $mMemberList;
 
-	public function __construct( $pStructureId=null, $pContentId=null, $pMemberList=Null ) {
+	public function __construct( $pStructureId=0, $pContentId=0, $pMemberList=null ) {
 		parent::__construct();
 		$this->registerContentType( PIGEONHOLES_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => PIGEONHOLES_CONTENT_TYPE_GUID,
@@ -126,7 +127,7 @@ class Pigeonholes extends LibertyMime {
 
 	/**
 	* get all content inserted in a given pigeonhole. if no id is given, it gets all content for all pigeonholes
-	* @param $pContentId content id of the pigeonhole
+	* @param int $pContentId content id of the pigeonhole
 	* @return array of pigeonhole members with according title and content type guid
 	**/
 	public function getMemberList( &$pListHash ) {
@@ -155,11 +156,7 @@ class Pigeonholes extends LibertyMime {
 		}
 
 		// Do we have any special tweaks for the list?
-		if( !empty( $this->mMemberList['Order'] ) ) {
-			$order = "ORDER BY ".$this->mMemberList['Order'];
-		} else {
-			$order = "ORDER BY lc.`content_type_guid`, lc.`title` ASC";
-		}
+		$order = ( !empty( $this->mMemberList['Order'] ) ) ? "ORDER BY " . $this->mMemberList['Order'] : "ORDER BY lc.`content_type_guid`, lc.`title` ASC";
 
 		if( !empty( $this->mMemberList['Select'] ) ) {
 			$select .= $this->mMemberList['Select'];
@@ -259,11 +256,7 @@ class Pigeonholes extends LibertyMime {
 		$where .= " lc.`content_type_guid` != ? ";
 		$bindVars[] = PIGEONHOLES_CONTENT_TYPE_GUID;
 
-		if( !empty( $pListHash['sort_mode'] ) ) {
-			$order = " ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] )." ";
-		} else {
-			$order = " ORDER BY lc.`content_type_guid`, lc.`title` ASC";
-		}
+		$order = ( !empty( $pListHash['sort_mode'] ) ) ? " ORDER BY " . $this->mDb->convertSortmode( $pListHash['sort_mode'] ) . " " : " ORDER BY lc.`content_type_guid`, lc.`title` ASC";
 
 		$query = "SELECT pigm.`parent_id`, lc.`content_id`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, uu.`login`, uu.`real_name`
 			FROM `".BIT_DB_PREFIX."liberty_content` lc
@@ -320,7 +313,7 @@ class Pigeonholes extends LibertyMime {
 	 * @return array|null if there is no pigeonhole
 	 * @TODO We need to sort the returned values that successive pigoenholes are grouped together.
 	 */
-	public function getPigeonholesPathList( $pContentId=null, $pTruncate = false, $pShowAll = false ) {
+	public function getPigeonholesPathList( $pContentId=0, $pTruncate = false, $pShowAll = false ) {
 		global $gBitSystem;
 		$where = $join = '';
 
@@ -508,15 +501,11 @@ class Pigeonholes extends LibertyMime {
 		}
 
 		// only use subselect for old crappy mysql
-		if( $gBitDbType != 'mysql' ) {
-			$subselect = ", (
+		$subselect = ( $gBitDbType != 'mysql' ) ? ", (
 				SELECT COUNT( pm.`content_id` )
-				FROM `".BIT_DB_PREFIX."pigeonhole_members` pm
+				FROM `" . BIT_DB_PREFIX . "pigeonhole_members` pm
 				WHERE pm.`parent_id`=pig.`content_id`
-			) AS members_count";
-		} else {
-			$subselect = "";
-		}
+			) AS members_count" : "";
 
 		$query = "SELECT pig.*, ls.`root_structure_id`, ls.`parent_id`, lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`format_guid`,
 			uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
@@ -543,7 +532,7 @@ class Pigeonholes extends LibertyMime {
 			}
 
 			if( !empty( $pListHash['parse_data'] ) && !empty( $aux['data'] )) {
-				$aux['parsed_data'] = $this->parseData( $aux['data'], $aux['format_guid'] );
+				$aux['parsed_data'] = self::parseDataHash( $aux['data'], $aux['format_guid'] );
 			}
 
 			if( !empty( $pListHash['force_extras'] ) || ( !empty( $pListHash['load_extras'] ) && $aux['structure_id'] == @$pListHash['structure_id'] ) ) {
@@ -756,26 +745,18 @@ class Pigeonholes extends LibertyMime {
 		$pParamHash['preferences_store'] = !empty( $pParamHash['prefs'] ) ? $pParamHash['prefs'] : null;
 
 		// structure store
-		if( BitBase::verifyId( $pParamHash['root_structure_id'] ?? 0 ) ) {
-			$pParamHash['structure_store']['root_structure_id'] = $pParamHash['root_structure_id'];
-		} else {
-			$pParamHash['structure_store']['root_structure_id'] = null;
-		}
+		$pParamHash['structure_store']['root_structure_id'] = ( BitBase::verifyId( $pParamHash['root_structure_id'] ?? 0 ) ) ? $pParamHash['root_structure_id'] : null;
 
-		if( BitBase::verifyId( $pParamHash['parent_id'] ?? 0 ) ) {
-			$pParamHash['structure_store']['parent_id'] = $pParamHash['parent_id'];
-		} else {
-			$pParamHash['structure_store']['parent_id'] = null;
-		}
+		$pParamHash['structure_store']['parent_id'] = ( BitBase::verifyId( $pParamHash['parent_id'] ?? 0 ) ) ? $pParamHash['parent_id'] : null;
 
 		return count( $this->mErrors ) == 0;
 	}
 
 	/**
 	* Store pigeonhole member
-	* @param $pParamHash an array of content to be stored.
-	* @param $pParamHash[parent_id] id of pigeonhole it belongs to, default is $this->mContentId
-	* @param $pParamHash[content_id] content_id of the item to be stored
+	* @param array$pParamHash an array of content to be stored.
+	* @val $pParamHash[parent_id] id of pigeonhole it belongs to, default is $this->mContentId
+	* @val $pParamHash[content_id] content_id of the item to be stored
 	* @return bool true on success, false if store could not occur. If false, $this->mErrors will have reason why
 	**/
 	public function insertPigeonholeMember( &$pParamHash ) {
@@ -784,7 +765,7 @@ class Pigeonholes extends LibertyMime {
 				$result = $this->mDb->associateInsert( BIT_DB_PREFIX."pigeonhole_members", $item );
 			}
 		} else {
-			error_log( "Error inserting pigeonhole: " . vc($this->mErrors));
+			error_log( "Error inserting pigeonhole: " . \Bitweaver\vc($this->mErrors));
 		}
 		return count( $this->mErrors ) == 0;
 	}
@@ -804,7 +785,7 @@ class Pigeonholes extends LibertyMime {
 				$tmp['member_store'][$key]['parent_id'] = $this->mContentId;
 				$pParamHash[$key]['parent_id'] = $this->mContentId;
 			} else {
-				$this->mErrors['store_members'] = tra( 'The content could not be inserted because the parent_id was missing.' );
+				$this->mErrors['store_members'] = KernelTools::tra( 'The content could not be inserted because the parent_id was missing.' );
 			}
 
 			if( isset( $item['content_id'] ) && BitBase::verifyId( $item['content_id'] ) ) {
@@ -959,11 +940,11 @@ class Pigeonholes extends LibertyMime {
 	/**
 	 * Get all child pigeonholes starting from any parent
 	 * 
-	 * @param array $pContentId of the pigoenhole
-	 * @param array $pStructureId of the pigeonhole
+	 * @param int $pContentId of the pigoenhole
+	 * @param int $pStructureId of the pigeonhole
 	 * @return array of child pigeonholes on success, empty array on failure
 	 */
-	public function getSubPigeonholes( $pContentId = null, $pStructureId = null ) {
+	public function getSubPigeonholes( $pContentId = 0, $pStructureId = 0 ) {
 		global $gStructure;
 		$ret = [];
 
@@ -974,7 +955,7 @@ class Pigeonholes extends LibertyMime {
 		}
 
 		if( BitBase::verifyId( $pContentId ) && !BitBase::verifyId( $pStructureId )) {
-			$pigeon = $struct->getNode( null, $pContentId );
+			$pigeon = $struct->getNode( 0, $pContentId );
 			$pStructureId = $pigeon['structure_id'];
 		}
 
@@ -983,7 +964,7 @@ class Pigeonholes extends LibertyMime {
 
 			// weed out duplicates
 			foreach( $tree as $pigeon ) {
-				if( !in_array( $pigeon['content_id'], array_keys( $ret ))) {
+				if( !\in_array( $pigeon['content_id'], array_keys( $ret ))) {
 					$ret[$pigeon['content_id']] = $pigeon;
 				}
 			}
@@ -1019,7 +1000,7 @@ function pigeonholes_pathlist_sorter( $aa, $ab ) {
  * 
  * @param array $pObject 
  * @access public
- * @return bool true on success, false on failure - mErrors will contain reason for failure
+ * @return void
  */
 function pigeonholes_content_display( &$pObject ) {
 	global $gBitSystem, $gBitSmarty, $gBitUser, $gBitThemes;
@@ -1038,7 +1019,7 @@ function pigeonholes_content_display( &$pObject ) {
 
 		// we need to check all pigeonholes in the path, load the prefs and work out if the user is allowed to view the page
 		if( isset( $access_granted ) && $access_granted === false ) {
-			$msg = tra( "This content is part of a category to which you have no access to. Please log in or request the appropriate permission from the site administrator." );
+			$msg = KernelTools::tra( "This content is part of a category to which you have no access to. Please log in or request the appropriate permission from the site administrator." );
 			$gBitSystem->fatalPermission( null, $msg );
 		}
 	}
@@ -1068,7 +1049,7 @@ function pigeonholes_content_display( &$pObject ) {
  * 
  * @param array $pObject 
  * @access public
- * @return bool true on success, false on failure - mErrors will contain reason for failure
+ * @return void
  */
 function pigeonholes_content_edit( $pObject=null ) {
 	global $gBitSmarty, $gBitUser, $gBitSystem;
@@ -1095,7 +1076,7 @@ function pigeonholes_content_edit( $pObject=null ) {
  * 
  * @param array $pObject 
  * @access public
- * @return bool true on success, false on failure - mErrors will contain reason for failure
+ * @return void
  */
 function pigeonholes_content_expunge( $pObject=null ) {
 	$pigeonholes = new Pigeonholes();
@@ -1185,7 +1166,7 @@ function pigeonholes_content_store( $pObject, $pParamHash ) {
 					}
 
 					if( !$pigeonholes->insertPigeonholeMember( $memberHash ) ) {
-						$gBitSmarty->assign( 'msg', tra( "There was a problem inserting the content into the pigeonholes." ) );
+						$gBitSmarty->assign( 'msg', KernelTools::tra( "There was a problem inserting the content into the pigeonholes." ) );
 						$gBitSystem->display( 'error.tpl' , null, [ 'display_mode' => 'display' ] );
 						die;
 					}
