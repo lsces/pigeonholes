@@ -90,7 +90,7 @@
 					{/legend}
 				{/jstab}
 
-				{if $gBitSystem->isFeatureActive('pigeonholes_display_description') && $gBitUser->hasPermission('p_liberty_attach_attachments') }
+				{if $gBitSystem->isFeatureActive('pigeonholes_display_description') and $gBitUser->hasPermission('p_liberty_attach_attachments') }
 					{jstab title="Attachments"}
 						<div class=row>
 							{legend legend="Attachments"}

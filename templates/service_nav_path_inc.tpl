@@ -1,5 +1,5 @@
 {strip}
-{if $gBitSystem->isFeatureActive( 'pigeonholes_display_path' ) && $pigeonData}
+{if $gBitSystem->isFeatureActive( 'pigeonholes_display_path' ) and $pigeonData}
 	<div class="structurebar pigeonholesbar">
 		{foreach from=$pigeonData item=pigeonItem}
 			<span class="path">{$pigeonItem.display_path}

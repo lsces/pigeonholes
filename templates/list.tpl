@@ -39,7 +39,7 @@
 			{if $gBitSystem->isFeatureActive('pigeonholes_display_description')}
 				{$item.parsed_data}
 			{/if}
-			{if $gBitSystem->isFeatureActive( 'pigeonholes_display_subtree' ) && count($item.subtree) > 1}
+			{if $gBitSystem->isFeatureActive( 'pigeonholes_display_subtree' ) and count($item.subtree) > 1}
 				{include file="bitpackage:pigeonholes/view_structure_inc.tpl" subtree=$item.subtree no_details=true}
 			{/if}
 			<hr />

@@ -1,7 +1,7 @@
 {strip}
 {assign var=sid value=$subtree[ix].structure_id}
 
-{if $gBitSystem->getConfig('pigeonholes_list_style') == "dynamic" && !$no_details}
+{if $gBitSystem->getConfig('pigeonholes_list_style') == "dynamic" and !$no_details}
 
 	<h3 class="highlight"><a href="{$smarty.const.PIGEONHOLES_PKG_URL}{
 			if $gBitSystem->isFeatureActive('pretty_urls')
@@ -63,7 +63,7 @@
 		</div>
 	{/if}
 
-	{if $subtree[ix].content_id == $smarty.request.content_id || $subtree[ix].structure_id == $smarty.request.structure_id}
+	{if $subtree[ix].content_id == $smarty.request.content_id or $subtree[ix].structure_id == $smarty.request.structure_id}
 		{assign var=current value=1}
 	{else}
 		{assign var=current value=0}

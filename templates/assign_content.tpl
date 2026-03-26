@@ -71,7 +71,7 @@
 				<input type="hidden" name="content_type" value="{$contentSelect}" />
 				<input type="hidden" name="root_structure_id" value="{$smarty.request.root_structure_id}" />
 
-				{if $gBitSystem->isFeatureActive( 'custom_member_sorting' ) && $smarty.request.include eq 'members'}
+				{if $gBitSystem->isFeatureActive( 'custom_member_sorting' ) and $smarty.request.include eq 'members'}
 					{formfeedback warning="Using this insertion method will reset any custom sorting you have done so far."}
 				{/if}
 
@@ -155,7 +155,7 @@
 					<dl>
 						<dt>{counter name=dogEatsPigeon}</dt>
 						<dd>{$pigeon.display_path}
-							{if !empty($pigeon.parsed_data) && $gBitSystem->isFeatureActive('pigeonholes_display_description')}
+							{if !empty($pigeon.parsed_data) and $gBitSystem->isFeatureActive('pigeonholes_display_description')}
 								<br /><small>{$pigeon.parsed_data}</small>
 							{/if}
 						</dd>
@@ -167,7 +167,7 @@
 
 				{if $assignableContent}
 					<div class="form-group">
-						{if $smarty.request.include == 'members' && $listInfo.current_page < $listInfo.total_pages}
+						{if $smarty.request.include == 'members' and $listInfo.current_page < $listInfo.total_pages}
 							<label><input type="checkbox" name="insert_content_and_next" /> {tr}Go To Next Page After Insert{/tr}</label>
 						{/if}
 					</div>
