@@ -1,5 +1,5 @@
 {strip}
-{if $gBitSystem->isFeatureActive( 'pigeonholes_display_members' ) and $pigeonData}
+{if $gBitSystem->isFeatureActive( 'pigeonholes_display_members' ) && $pigeonData}
 	<div class="service pigeonholes">
 		{if $gBitSystem->getConfig('pigeonholes_limit_member_number') == 0}
 			<h2>{tr}Categories{/tr}</h2>
@@ -17,7 +17,7 @@
 				<h3>{$pigeonItem.display_path}</h3>
 
 				<p>
-					{if $pigeonItem.parsed_data and $gBitSystem->isFeatureActive( 'pigeonholes_display_description' )}
+					{if $pigeonItem.parsed_data && $gBitSystem->isFeatureActive( 'pigeonholes_display_description' )}
 						{$pigeonItem.parsed_data}<br />
 					{/if}
 
@@ -28,9 +28,9 @@
 					{foreach from=$pigeonItem.members item=member name=members}
 						{assign var=ctg1 value=$member.content_type_guid}
 
-						{if $ctg1 ne $ctg2 and $gBitSystem->isFeatureActive( 'pigeonholes_display_content_type' )}{if $ctg2}<br />{/if}{$gLibertySystem->getContentTypeName($ctg1)}:&nbsp;{/if}
+						{if $ctg1 ne $ctg2 && $gBitSystem->isFeatureActive( 'pigeonholes_display_content_type' )}{if $ctg2}<br />{/if}{$gLibertySystem->getContentTypeName($ctg1)}:&nbsp;{/if}
 
-						{if !$gBitSystem->getConfig('pigeonholes_limit_member_number') or $member_count lt $gBitSystem->getConfig('pigeonholes_limit_member_number')}
+						{if !$gBitSystem->getConfig('pigeonholes_limit_member_number') || $member_count lt $gBitSystem->getConfig('pigeonholes_limit_member_number')}
 							{if $serviceHash.content_id == $member.content_id}<strong>{/if}
 								{$member.display_link}
 								{if $serviceHash.content_id == $member.content_id}</strong>{/if}
