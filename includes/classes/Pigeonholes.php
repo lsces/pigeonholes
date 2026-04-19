@@ -56,7 +56,7 @@ class Pigeonholes extends LibertyMime {
 			'handler_class' => 'Pigeonholes',
 			'handler_package' => 'pigeonholes',
 			'handler_file' => 'Pigeonholes.php',
-			'maintainer_url' => 'http://www.bitweaver.org'
+			'maintainer_url' => 'https://www.bitweaver.org'
 		) );
 		$this->mContentId = $pContentId;
 		$this->mStructureId = $pStructureId;
