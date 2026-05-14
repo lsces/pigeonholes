@@ -42,7 +42,7 @@ $gStructure->load();
 // expunge request
 if( !empty( $_REQUEST['action'] ) ) {
 	if( $_REQUEST['action'] == 'dismember' && !empty( $_REQUEST['content_id'] ) && !empty( $_REQUEST['parent_id'] ) && $gContent->verifyUpdatePermission() ) {
-		if( $gContent->expungePigeonholeMember( array( 'parent_id' => $_REQUEST['content_id'], 'member_id' => $_REQUEST['parent_id'] ) ) ) {
+		if( $gContent->expungePigeonholeMember( [ 'parent_id' => $_REQUEST['content_id'], 'member_id' => $_REQUEST['parent_id'] ] ) ) {
 			$feedback['success'] = tra( 'The item was successfully removed' );
 		} else {
 			$feedback['error'] = tra( 'The item could not be removed' );
@@ -60,14 +60,14 @@ $gBitSmarty->assign( 'structureInfo', $gStructure->mInfo );
 $gBitSmarty->assign( 'subtree', $gStructure->getSubTree( $gStructure->mStructureId ) );
 
 if( $gContent->checkPathPermissions( $gContent->getField( 'path' ) ) ) {
-	$listHash = array(
+	$listHash = [
 		'root_structure_id'   => $gContent->mInfo['root_structure_id'],
 		'structure_id'        => $gContent->mInfo['structure_id'],
 		'parse_data'          => true,
 		'max_records'         => -1,
 		'load_extras'         => true,
 		'members_max_records' => -1,
-	);
+	];
 	$pigeonList = $gContent->getList( $listHash );
 	$gBitSmarty->assign( 'pigeonList', $pigeonList );
 } else {
@@ -76,5 +76,5 @@ if( $gContent->checkPathPermissions( $gContent->getField( 'path' ) ) ) {
 
 $gContent->addHit();
 // Display the template
-$gBitSystem->display( 'bitpackage:pigeonholes/view_structure.tpl', tra( 'View Pigeonhole' ) , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:pigeonholes/view_structure.tpl', tra( 'View Pigeonhole' ) , [ 'display_mode' => 'display' ]);
 ?>

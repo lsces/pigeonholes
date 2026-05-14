@@ -13,7 +13,7 @@ $tables = [
 		CONSTRAINT '
 			, CONSTRAINT `pigeonhole_members_parent_ref` FOREIGN KEY (`parent_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
 			, CONSTRAINT `pigeonhole_members_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
-	"
+	",
 ];
 
 global $gBitInstaller;
@@ -29,7 +29,7 @@ $gBitInstaller->registerPackageInfo( PIGEONHOLES_PKG_NAME, [
 
 // ### Sequences
 $sequences = [
-	'pigeonholes_id_seq' => [ 'start' => 1 ]
+	'pigeonholes_id_seq' => [ 'start' => 1 ],
 ];
 
 $gBitInstaller->registerSchemaSequences( PIGEONHOLES_PKG_NAME, $sequences );
@@ -52,6 +52,6 @@ $gBitInstaller->registerUserPermissions( PIGEONHOLES_PKG_NAME, [
 
 // Requirements
 $gBitInstaller->registerRequirements( PIGEONHOLES_PKG_NAME, [
-    'liberty' => [ 'min' => '5.0.0' ],
+	'liberty' => [ 'min' => '5.0.0' ],
 ] );
 

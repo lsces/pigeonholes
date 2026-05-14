@@ -31,4 +31,4 @@ $verifyStructurePermission = 'p_pigeonholes_create';
 include_once LIBERTY_PKG_INCLUDE_PATH.'structure_edit_inc.php';
 
 // Display the template
-$gBitSystem->display( 'bitpackage:pigeonholes/edit_structure.tpl', $gStructure->mInfo["title"] , array( 'display_mode' => 'edit' ));
+$gBitSystem->display( 'bitpackage:pigeonholes/edit_structure.tpl', $gStructure->mInfo["title"] , [ 'display_mode' => 'edit' ]);

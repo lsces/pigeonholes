@@ -25,6 +25,7 @@
  * required setup
  */
 namespace Bitweaver\Pigeonholes;
+
 use Bitweaver\BitBase;
 use Bitweaver\KernelTools;
 use Bitweaver\Liberty\LibertyContent;
@@ -50,14 +51,14 @@ class Pigeonholes extends LibertyMime {
 
 	public function __construct( $pStructureId=0, $pContentId=0, $pMemberList=null ) {
 		parent::__construct();
-		$this->registerContentType( PIGEONHOLES_CONTENT_TYPE_GUID, array(
+		$this->registerContentType( PIGEONHOLES_CONTENT_TYPE_GUID, [
 			'content_type_guid' => PIGEONHOLES_CONTENT_TYPE_GUID,
 			'content_name' => 'Pigeonhole',
 			'handler_class' => 'Pigeonholes',
 			'handler_package' => 'pigeonholes',
 			'handler_file' => 'Pigeonholes.php',
-			'maintainer_url' => 'https://www.bitweaver.org'
-		) );
+			'maintainer_url' => 'https://www.bitweaver.org',
+		] );
 		$this->mContentId = $pContentId;
 		$this->mStructureId = $pStructureId;
 		$this->mContentTypeGuid = PIGEONHOLES_CONTENT_TYPE_GUID;
@@ -94,16 +95,16 @@ class Pigeonholes extends LibertyMime {
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
 				WHERE $lookupColumn=?";
-			$result = $this->mDb->query( $query, array( $lookupId ) );
+			$result = $this->mDb->query( $query, [ $lookupId ] );
 
 			if( $result && $row = $result->fetchRow() ) {
 				$this->mInfo = $row;
 				$this->mContentId = $row['content_id'];
 				$this->mStructureId = $row['structure_id'];
 				$this->mInfo['user'] = $row['creator_user'];
-				$this->mInfo['real_name'] = isset( $row['creator_real_name'] ) ? $row['creator_real_name'] : $row['creator_user'];
+				$this->mInfo['real_name'] = $row['creator_real_name'] ?? $row['creator_user'];
 				$this->mInfo['display_name'] = RoleUser::getTitleFromHash( $this->mInfo );
-				$this->mInfo['editor'] = isset( $row['modifier_real_name'] ) ? $row['modifier_real_name'] : $row['modifier_user'];
+				$this->mInfo['editor'] = $row['modifier_real_name'] ?? $row['modifier_user'];
 				$this->mInfo['display_link'] = $this->getDisplayLink();
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->parseData();
@@ -117,7 +118,7 @@ class Pigeonholes extends LibertyMime {
 			if( $pExtras ) {
 				$this->mInfo['path'] = $this->getPigeonholePath();
 				$this->mInfo['display_path'] = $this->getDisplayPath( $this->mInfo['path'] );
-				$memberHash = array( 'max_records' => -1 );
+				$memberHash = [ 'max_records' => -1 ];
 				$this->mInfo['members'] = $this->getMemberList( $memberHash );
 				$this->mInfo['members_count'] = count( $this->mInfo['members'] );
 			}
@@ -170,7 +171,6 @@ class Pigeonholes extends LibertyMime {
 			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
 			$where .= $this->mMemberList['Where'];
 		}
-
 
 		$ret = [];
 		$query = "
@@ -522,13 +522,13 @@ class Pigeonholes extends LibertyMime {
 		while( $aux = $result->fetchRow() ) {
 			//$content_ids[]        = $aux['content_id'];
 			$aux['user']         = $aux['creator_user'];
-			$aux['real_name']    = isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'];
+			$aux['real_name']    = $aux['creator_real_name'] ?? $aux['creator_user'];
 			$aux['display_name'] = RoleUser::getDisplayNameFromHash( $aux );
-			$aux['editor']       = isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'];
+			$aux['editor']       = $aux['modifier_real_name'] ?? $aux['modifier_user'];
 			$aux['display_link'] = Pigeonholes::getDisplayLink( $aux['title'], $aux );
 			// get member count for mysql - haha
 			if( $gBitDbType == 'mysql' ) {
-				$aux['members_count'] = $this->mDb->getOne( "SELECT COUNT( pm.`content_id` ) FROM `".BIT_DB_PREFIX."pigeonhole_members` pm WHERE pm.`parent_id`=?", array( $aux['content_id'] ));
+				$aux['members_count'] = $this->mDb->getOne( "SELECT COUNT( pm.`content_id` ) FROM `".BIT_DB_PREFIX."pigeonhole_members` pm WHERE pm.`parent_id`=?", [ $aux['content_id'] ]);
 			}
 
 			if( !empty( $pListHash['parse_data'] ) && !empty( $aux['data'] )) {
@@ -640,7 +640,7 @@ class Pigeonholes extends LibertyMime {
 			// probably has to do with not null default nextval('public.liberty_structures_id_seq'::text)
 			if( !empty( $pParamHash['update'] ) ) {
 				if( !empty( $pParamHash['pigeonhole_store'] ) ) {
-					$result = $this->mDb->associateUpdate( $table, $pParamHash['pigeonhole_store'], array("content_id" => $this->mContentId ) );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['pigeonhole_store'], ["content_id" => $this->mContentId ] );
 				}
 				$pParamHash['structure_location_id'] = $this->mStructureId;
 			} else {
@@ -665,7 +665,7 @@ class Pigeonholes extends LibertyMime {
 			// store content items
 			if( !empty( $pParamHash['pigeonhole_members_store'] ) ) {
 				// remove items first
-				$this->expungePigeonholeMember( array( 'parent_id' => $this->mContentId ) );
+				$this->expungePigeonholeMember( [ 'parent_id' => $this->mContentId ] );
 				if( !$this->insertPigeonholeMember( $pParamHash['pigeonhole_members_store'] ) ) {
 					$this->mErrors['store'] = 'The content could not be inserted into the respective categories.';
 				}
@@ -809,7 +809,7 @@ class Pigeonholes extends LibertyMime {
 	* @return bool true on success, false if store could not occur. If false, $this->mErrors will have reason why
 	**/
 	public function expungePigeonholeMember( $pParamHash ) {
-	    if( BitBase::verifyId( $pParamHash['parent_id'] ) || BitBase::verifyId( $pParamHash['member_id'] ?? 0 ) ) {
+		if( BitBase::verifyId( $pParamHash['parent_id'] ) || BitBase::verifyId( $pParamHash['member_id'] ?? 0 ) ) {
 			$where = '';
 			$bindVars = [];
 
@@ -871,9 +871,9 @@ class Pigeonholes extends LibertyMime {
 			foreach( $contentIds as $id ) {
 				// now we have the content ids - let the nuking begin
 				$query = "DELETE FROM `".BIT_DB_PREFIX."pigeonholes` WHERE `content_id` = ?";
-				$result = $this->mDb->query( $query, array( $id['content_id'] ) );
+				$result = $this->mDb->query( $query, [ $id['content_id'] ] );
 				$query = "DELETE FROM `".BIT_DB_PREFIX."pigeonhole_members` WHERE `parent_id` = ?";
-				$result = $this->mDb->query( $query, array( $id['content_id'] ) );
+				$result = $this->mDb->query( $query, [ $id['content_id'] ] );
 
 				// remove all entries from content tables
 				$this->mContentId = $id['content_id'];
@@ -991,7 +991,6 @@ function pigeonholes_pathlist_sorter( $aa, $ab ) {
 		}
 	}
 }
-
 
 // ============= SERVICE FUNCTIONS =============
 
@@ -1159,9 +1158,9 @@ function pigeonholes_content_store( $pObject, $pParamHash ) {
 				if( $pigeonholes->expungePigeonholeMember( [ 'member_id' => $pParamHash['content_id'] ] ) && !empty( $pParamHash['pigeonholes'] ) )  {
 					// insert the content into the desired pigeonholes
 					foreach( $pParamHash['pigeonholes']['pigeonhole'] as $p_id ) {
-						$memberHash[] = [							
+						$memberHash[] = [
 							'parent_id' => $p_id,
-							'content_id' => $pParamHash['content_id']
+							'content_id' => $pParamHash['content_id'],
 						];
 					}
 
@@ -1188,12 +1187,12 @@ function pigeonholes_content_list( &$pObject, $pParamHash = null ) {
 	global $gBitSystem, $gBitSmarty;
 	if( $gBitSystem->isFeatureActive( 'pigeonholes_list_filter' )) {
 		$pigeonholes = new Pigeonholes();
-		$listHash = array(
-			'sort_mode' => array(
-				'root_structure_id_asc', 'title_asc'
-			),
+		$listHash = [
+			'sort_mode' => [
+				'root_structure_id_asc', 'title_asc',
+			],
 			'insertable' => true,
-		);
+		];
 		$pigeonList = $pigeonholes->getList( $listHash );
 		$list = [];
 		foreach( $pigeonList as $pigeon ) {
@@ -1220,7 +1219,7 @@ function pigeonholes_content_list_sql( &$pObject, $pParamHash = null ) {
 
 		if( !empty( $pParamHash['liberty_categories'] )) {
 			if( !is_array( $pParamHash['liberty_categories'] )) {
-				$pParamHash['liberty_categories'] = array( $pParamHash['liberty_categories'] );
+				$pParamHash['liberty_categories'] = [ $pParamHash['liberty_categories'] ];
 			}
 
 			// if we want to allow items in subcategories, we get those and include them in the query
@@ -1247,7 +1246,7 @@ function pigeonholes_content_list_sql( &$pObject, $pParamHash = null ) {
 
 		if( !empty( $pParamHash['liberty_root_categories'] )) {
 			if( !is_array( $pParamHash['liberty_root_categories'] )) {
-				$pParamHash['liberty_root_categories'] = array( $pParamHash['liberty_root_categories'] );
+				$pParamHash['liberty_root_categories'] = [ $pParamHash['liberty_root_categories'] ];
 			}
 
 			// if we want to allow items in subcategories, we get those and include them in the query

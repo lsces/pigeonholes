@@ -17,9 +17,9 @@ $pRegisterHash = [
 define( 'PIGEONHOLES_PKG_NAME', $pRegisterHash['package_name'] );
 define( 'PIGEONHOLES_PKG_URL', BIT_ROOT_URL . basename( $pRegisterHash['package_path'] ) . '/' );
 define( 'PIGEONHOLES_PKG_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/' );
-define( 'PIGEONHOLES_PKG_INCLUDE_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/'); 
+define( 'PIGEONHOLES_PKG_INCLUDE_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/');
 define( 'PIGEONHOLES_PKG_CLASS_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/classes/');
-define( 'PIGEONHOLES_PKG_ADMIN_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/admin/'); 
+define( 'PIGEONHOLES_PKG_ADMIN_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/admin/');
 
 $gBitSystem->registerPackage( $pRegisterHash );
 

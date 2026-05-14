@@ -52,7 +52,7 @@ $pigeonholeEditSettings = [
 	],
 	'pigeonholes_allow_forbid_insertion' => [
 		'label' => 'Allow Forbid Insertion',
-		'note' => 'Allows pigeonholes to be set to forbid insertion of new members. This is good for heirarchical categories where only leaf categories should have members.'
+		'note' => 'Allows pigeonholes to be set to forbid insertion of new members. This is good for heirarchical categories where only leaf categories should have members.',
 	],
 ];
 $gBitSmarty->assign( 'pigeonholeEditSettings', $pigeonholeEditSettings );

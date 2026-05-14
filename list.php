@@ -40,5 +40,5 @@ if( !empty( $pigeonList ) ) {
 }
 $gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 
-$gBitSystem->display( 'bitpackage:pigeonholes/list.tpl', tra( 'List Categories' ) , array( 'display_mode' => 'list' ));
+$gBitSystem->display( 'bitpackage:pigeonholes/list.tpl', tra( 'List Categories' ) , [ 'display_mode' => 'list' ]);
 ?>

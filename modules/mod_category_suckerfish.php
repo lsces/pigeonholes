@@ -30,12 +30,12 @@ if($gBitSystem->isPackageActive('pigeonholes')) {
 	$s = new LibertyStructure();
 
 	// Prep get list screws with us.
-	$listHash = array('load_only_root'=> true, 'sort_mode' => 'lc.title_asc', 'offset' => 0, 'max_records' => '999999', 'find' => '');
+	$listHash = ['load_only_root'=> true, 'sort_mode' => 'lc.title_asc', 'offset' => 0, 'max_records' => '999999', 'find' => ''];
 	if (!empty($module_params['root_structure_id'])) {
 	  $listHash['root_structure_id'] = $module_params['root_structure_id'];
 	}
 	if (!empty($module_params['structure_id'])) {
-	  $l = array(array('structure_id' => $module_params['structure_id']));
+	  $l = [['structure_id' => $module_params['structure_id']]];
 	}
 	else {
 		$l = $p->getList($listHash);
@@ -97,7 +97,7 @@ if (!defined('MENU_LEVELS_DEFINED')) {
 			$ret .= '</li>';
 		}
 		$ret .= '</ul>';
-		
+
 		return $ret;
 	}
 	define('MENU_LEVELS_DEFINED', 1);
@@ -105,10 +105,10 @@ if (!defined('MENU_LEVELS_DEFINED')) {
 
 if (!empty($module_params['expand_root']) && $module_params['expand_root']) {
 	if (isset($ns[0]) && !empty($ns[0]['children'])) {
-        	$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns[0]['children'], 0));
+			$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns[0]['children'], 0));
 	}
 	else if (!empty($ns[0]['children'])) {
-        	$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns['children'], 0));
+			$gBitSmarty->assign( 'pigeonMenu', menuLevels($ns['children'], 0));
 	}
 }
 else {

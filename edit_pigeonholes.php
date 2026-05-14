@@ -22,7 +22,6 @@ $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_create' );
 
 use Bitweaver\Pigeonholes\Pigeonholes;
-use Bitweaver\Liberty\LibertyStructure;
 include_once PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php';
 
 // include edit structure file only when structure_id is known
@@ -80,16 +79,16 @@ if( !empty( $_REQUEST['action'] ) || isset( $_REQUEST["confirm"] ) ) {
 		$formHash['remove'] = true;
 		$formHash['structure_id'] = $_REQUEST['structure_id'];
 		$formHash['action'] = 'remove';
-		$msgHash = array(
+		$msgHash = [
 			'label' => 'Remove Pigeonhole',
 			'confirm_item' => $gContent->mInfo['title'].'<br />'.tra( 'and any subcategories' ),
 			'warning' => 'This will remove the pigeonhole but will <strong>not</strong> modify or remove the content itself.',
-		);
+		];
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	}
 
 	if( $_REQUEST['action'] == 'dismember' && !empty( $_REQUEST['pigeonhole_content_id'] ) && !empty( $_REQUEST['parent_id'] ) ) {
-		if( $gContent->expungePigeonholeMember( array( 'parent_id' => $_REQUEST['parent_id'], 'member_id' => $_REQUEST['pigeonhole_content_id'] ) ) ) {
+		if( $gContent->expungePigeonholeMember( [ 'parent_id' => $_REQUEST['parent_id'], 'member_id' => $_REQUEST['pigeonhole_content_id'] ] ) ) {
 			$feedback['success'] = tra( 'The item was successfully removed' );
 		} else {
 			$feedback['error'] = tra( 'The item could not be removed' );
@@ -120,10 +119,10 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
 
 // get available groups ready that we can assign the pigoenhole to one of them
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
-	$listHash = array(
+	$listHash = [
 		'only_root_groups' => true,
-		'sort_mode' => !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'group_name_asc'
-	);
+		'sort_mode' => !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'group_name_asc',
+	];
 	$allGroups = $gBitUser->getAllGroups( $listHash );
 
 	// create a usable array for group selection
@@ -134,11 +133,11 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
 	$gBitSmarty->assign( 'groups', $groups );
 }
 
-$listHash = array(
+$listHash = [
 	'root_structure_id' => !empty( $gContent->mInfo['root_structure_id'] ) ? $gContent->mInfo['root_structure_id'] : null,
 	'force_extras'      => true,
-	'max_records'       => -1
-);
+	'max_records'       => -1,
+];
 $pigeonList = $gContent->getList( $listHash );
 $gBitSmarty->assign( 'pigeonList', $pigeonList );
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : null );
@@ -151,7 +150,7 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_themes' ) ) {
 
 // Display the template
 if ( !empty( $gStructure ) ) {
-	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', !empty( $gStructure->mInfo['title'] ) ? tra( 'Edit Pigeonhole' ).': '.$gStructure->mInfo["title"] : tra( 'Create Pigeonhole' ) , array( 'display_mode' => 'edit' ));
+	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', !empty( $gStructure->mInfo['title'] ) ? tra( 'Edit Pigeonhole' ).': '.$gStructure->mInfo["title"] : tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
 } else {
-	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', tra( 'Create Pigeonhole' ) , array( 'display_mode' => 'edit' ));
+	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
 }

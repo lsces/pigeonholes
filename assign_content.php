@@ -26,7 +26,7 @@ include_once( PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php' );
 $feedback = '';
 $gBitSmarty->assign( 'feedback', $feedback );
 
-$contentTypes = array( '' => tra( 'All Content' ) );
+$contentTypes = [ '' => tra( 'All Content' ) ];
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( $cType['content_type_guid'] != PIGEONHOLES_CONTENT_TYPE_GUID ) {
 		$contentTypes[$cType['content_type_guid']] = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
@@ -35,13 +35,13 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 $gBitSmarty->assign( 'contentTypes', $contentTypes );
 $gBitSmarty->assign( 'contentSelect', $contentSelect = !isset( $_REQUEST['content_type'] ) ? null : $_REQUEST['content_type'] );
 
-$listHash = array(
+$listHash = [
 	'find' => ( empty( $_REQUEST['find'] ) ? null : $_REQUEST['find'] ),
 	'sort_mode' => ( empty( $_REQUEST['sort_mode'] ) ? null : $_REQUEST['sort_mode'] ),
 	'max_records' => ( BitBase::verifyId( $_REQUEST['max_records'] ) ) ? $_REQUEST['max_records'] : 10,
 	'include_members' => ( ( !empty( $_REQUEST['include'] ) && $_REQUEST['include'] == 'members' ) ? true : false ),
 	'content_type' => $contentSelect,
-);
+];
 
 // We need to handle insert and next where we are NOT actually doing an insert
 if( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_and_next'] )) {
@@ -67,15 +67,15 @@ if(( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_
 	foreach( $assignableContent as $item ) {
 		if( !empty( $_REQUEST['pigeonhole'][$item['content_id']] ) ) {
 			foreach( $_REQUEST['pigeonhole'][$item['content_id']] as $parent_id ) {
-				$memberHash[$parent_id][] = array(
+				$memberHash[$parent_id][] = [
 					'parent_id' => $parent_id,
 					'content_id' => $item['content_id'],
-				);
+				];
 			}
 		}
 
 		if( !empty( $_REQUEST['include'] ) && $_REQUEST['include'] == 'members' ) {
-			if( !empty( $item['content_id'] ) && !$gContent->expungePigeonholeMember( array( 'member_id' => $item['content_id'], 'deletables' => $deletableParentIds ) ) ) {
+			if( !empty( $item['content_id'] ) && !$gContent->expungePigeonholeMember( [ 'member_id' => $item['content_id'], 'deletables' => $deletableParentIds ] ) ) {
 				$feedback['error'] = 'The content could not be deleted before insertion.';
 			}
 		}
@@ -103,11 +103,11 @@ if(( !empty( $_REQUEST['insert_content'] ) || !empty( $_REQUEST['insert_content_
 
 $gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 
-$listHash = array(
+$listHash = [
 	'load_only_root' => true,
 	'max_records' => -1,
 	'parse_data' => true,
-);
+];
 $pigeonRootData = $gContent->getList( $listHash );
 $pigeonRoots[0] = 'All';
 foreach( $pigeonRootData as $root ) {
@@ -115,13 +115,13 @@ foreach( $pigeonRootData as $root ) {
 }
 $gBitSmarty->assign( 'pigeonRoots', !empty( $pigeonRoots ) ? $pigeonRoots : null );
 
-$listHash = array(
+$listHash = [
 	'root_structure_id' => ( !empty( $_REQUEST['root_structure_id'] ) ? $_REQUEST['root_structure_id'] : null ),
 	'force_extras' => true,
 	'max_records' => -1,
 	'sort_mode' => 'ls.`parent_id_asc`',
 	'parse_data' => true,
-);
+];
 
 if( $gBitSystem->isFeatureActive( 'pigeonholes_allow_forbid_insertion' )) {
 	$listHash['insertable'] = true;
@@ -134,5 +134,5 @@ $gBitSmarty->assign( 'assignableContent', $assignableContent );
 $gBitSmarty->assign( 'contentCount', count( $assignableContent ) );
 
 // Display the template
-$gBitSystem->display( 'bitpackage:pigeonholes/assign_content.tpl', tra( 'Assign Content to Categories' ) , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:pigeonholes/assign_content.tpl', tra( 'Assign Content to Categories' ) , [ 'display_mode' => 'display' ]);
 ?>
