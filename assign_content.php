@@ -16,6 +16,7 @@
 /**
  * required setup
  */
+use Bitweaver\KernelTools;
 require_once '../kernel/includes/setup_inc.php';
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
@@ -26,7 +27,7 @@ include_once( PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php' );
 $feedback = '';
 $gBitSmarty->assign( 'feedback', $feedback );
 
-$contentTypes = [ '' => tra( 'All Content' ) ];
+$contentTypes = [ '' => KernelTools::tra( 'All Content' ) ];
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( $cType['content_type_guid'] != PIGEONHOLES_CONTENT_TYPE_GUID ) {
 		$contentTypes[$cType['content_type_guid']] = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
@@ -134,5 +135,5 @@ $gBitSmarty->assign( 'assignableContent', $assignableContent );
 $gBitSmarty->assign( 'contentCount', count( $assignableContent ) );
 
 // Display the template
-$gBitSystem->display( 'bitpackage:pigeonholes/assign_content.tpl', tra( 'Assign Content to Categories' ) , [ 'display_mode' => 'display' ]);
+$gBitSystem->display( 'bitpackage:pigeonholes/assign_content.tpl', KernelTools::tra( 'Assign Content to Categories' ) , [ 'display_mode' => 'display' ]);
 ?>

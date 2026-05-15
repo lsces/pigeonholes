@@ -1,4 +1,5 @@
 <?php
+use Bitweaver\KernelTools;
 // $Header$
 
 $pigeonholeDisplaySettings = [
@@ -66,8 +67,8 @@ $pigeonholeContentEditSettings = [
 $gBitSmarty->assign( 'pigeonholeContentEditSettings', $pigeonholeContentEditSettings );
 
 $listStyles = [
-	'dynamic' => tra( 'Dynamic list' ),
-	'table' => tra( 'Table based list' ),
+	'dynamic' => KernelTools::tra( 'Dynamic list' ),
+	'table' => KernelTools::tra( 'Table based list' ),
 ];
 $gBitSmarty->assign( 'listStyles', $listStyles );
 
@@ -77,13 +78,13 @@ unset( $tableColumns[0] );
 $gBitSmarty->assign( 'tableColumns', $tableColumns );
 
 $memberLimit = [
-	'0'    => tra( 'Only display category title' ),
+	'0'    => KernelTools::tra( 'Only display category title' ),
 	'10'   => 10,
 	'20'   => 20,
 	'30'   => 30,
 	'50'   => 50,
 	'100'  => 100,
-	'9999' => tra( 'Unlimited' ),
+	'9999' => KernelTools::tra( 'Unlimited' ),
 ];
 $gBitSmarty->assign( 'memberLimit', $memberLimit );
 

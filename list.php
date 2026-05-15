@@ -11,6 +11,7 @@
 /**
  * required setup
  */
+use Bitweaver\KernelTools;
 require_once("../kernel/includes/setup_inc.php");
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
@@ -40,5 +41,5 @@ if( !empty( $pigeonList ) ) {
 }
 $gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 
-$gBitSystem->display( 'bitpackage:pigeonholes/list.tpl', tra( 'List Categories' ) , [ 'display_mode' => 'list' ]);
+$gBitSystem->display( 'bitpackage:pigeonholes/list.tpl', KernelTools::tra( 'List Categories' ) , [ 'display_mode' => 'list' ]);
 ?>

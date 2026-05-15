@@ -22,6 +22,7 @@ $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_create' );
 
 use Bitweaver\Pigeonholes\Pigeonholes;
+use Bitweaver\KernelTools;
 include_once PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php';
 
 // include edit structure file only when structure_id is known
@@ -41,7 +42,7 @@ global $gStructure;
 // store the form if we need to
 if( !empty( $_REQUEST['pigeonhole_store'] ) ) {
 	if(( empty( $_REQUEST['pigeonhole']['title'] ))) {
-		$gBitSystem->fatalError( tra( "You must specify a title." ));
+		$gBitSystem->fatalError( KernelTools::tra( "You must specify a title." ));
 	}
 
 	// we need to get the root structure id
@@ -50,7 +51,7 @@ if( !empty( $_REQUEST['pigeonhole_store'] ) ) {
 	$pigeonStore = new Pigeonholes( null, !empty( $_REQUEST['pigeonhole_content_id'] ) ? $_REQUEST['pigeonhole_content_id'] : null );
 	$pigeonStore->load();
 	if( $pigeonStore->store( $_REQUEST['pigeonhole'] )) {
-		header( "Location: ".$_SERVER['SCRIPT_NAME'].'?structure_id='.$pigeonStore->mStructureId.( !empty( $_REQUEST['action'] ) ? '&action='.$_REQUEST['action'] : '' )."&success=".urlencode( tra( "The category was successfully stored" ) ) );
+		header( "Location: ".$_SERVER['SCRIPT_NAME'].'?structure_id='.$pigeonStore->mStructureId.( !empty( $_REQUEST['action'] ) ? '&action='.$_REQUEST['action'] : '' )."&success=".urlencode( KernelTools::tra( "The category was successfully stored" ) ) );
 	} else {
 		$feedback['error'] = $gContent->mErrors;
 	}
@@ -70,7 +71,7 @@ if( !empty( $_REQUEST['action'] ) || isset( $_REQUEST["confirm"] ) ) {
 	if( $_REQUEST["action"] == 'remove' || isset( $_REQUEST["confirm"] ) ) {
 		if( isset( $_REQUEST["confirm"] ) ) {
 			if( $gContent->expunge() ) {
-				bit_redirect( $_SERVER['SCRIPT_NAME'].'?structure_id='.$gContent->mInfo["parent_id"] );
+				KernelTools::bit_redirect( $_SERVER['SCRIPT_NAME'].'?structure_id='.$gContent->mInfo["parent_id"] );
 			} else {
 				$feedback['error'] = $gContent->mErrors;
 			}
@@ -81,7 +82,7 @@ if( !empty( $_REQUEST['action'] ) || isset( $_REQUEST["confirm"] ) ) {
 		$formHash['action'] = 'remove';
 		$msgHash = [
 			'label' => 'Remove Pigeonhole',
-			'confirm_item' => $gContent->mInfo['title'].'<br />'.tra( 'and any subcategories' ),
+			'confirm_item' => $gContent->mInfo['title'].'<br />'.KernelTools::tra( 'and any subcategories' ),
 			'warning' => 'This will remove the pigeonhole but will <strong>not</strong> modify or remove the content itself.',
 		];
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
@@ -89,13 +90,13 @@ if( !empty( $_REQUEST['action'] ) || isset( $_REQUEST["confirm"] ) ) {
 
 	if( $_REQUEST['action'] == 'dismember' && !empty( $_REQUEST['pigeonhole_content_id'] ) && !empty( $_REQUEST['parent_id'] ) ) {
 		if( $gContent->expungePigeonholeMember( [ 'parent_id' => $_REQUEST['parent_id'], 'member_id' => $_REQUEST['pigeonhole_content_id'] ] ) ) {
-			$feedback['success'] = tra( 'The item was successfully removed' );
+			$feedback['success'] = KernelTools::tra( 'The item was successfully removed' );
 		} else {
-			$feedback['error'] = tra( 'The item could not be removed' );
+			$feedback['error'] = KernelTools::tra( 'The item could not be removed' );
 		}
 		// Have we been asked to return somewhere else?
 		if (!empty($_REQUEST['return_uri'])) {
-			bit_redirect($_REQUEST['return_uri']);
+			KernelTools::bit_redirect($_REQUEST['return_uri']);
 		}
 		// used to avoid displaying edit form
 		unset( $_REQUEST['action'] );
@@ -110,7 +111,7 @@ if( !empty( $_REQUEST['success'] ) ) {
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
 	$tmpPerms = $gBitUser->isAdmin() ? $gBitUser->getGroupPermissions() : $gBitUser->mPerms;
 
-	$perms[''] = tra( 'None' );
+	$perms[''] = KernelTools::tra( 'None' );
 	foreach( $tmpPerms as $perm => $info ) {
 		$perms[$info['package']][$perm] = $perm;
 	}
@@ -126,7 +127,7 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
 	$allGroups = $gBitUser->getAllGroups( $listHash );
 
 	// create a usable array for group selection
-	$groups[0] = tra( 'None' );
+	$groups[0] = KernelTools::tra( 'None' );
 	foreach( $allGroups as $group ) {
 		$groups[$group['group_id']] = $group['group_name'];
 	}
@@ -150,7 +151,7 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_themes' ) ) {
 
 // Display the template
 if ( !empty( $gStructure ) ) {
-	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', !empty( $gStructure->mInfo['title'] ) ? tra( 'Edit Pigeonhole' ).': '.$gStructure->mInfo["title"] : tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
+	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', !empty( $gStructure->mInfo['title'] ) ? KernelTools::tra( 'Edit Pigeonhole' ).': '.$gStructure->mInfo["title"] : KernelTools::tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
 } else {
-	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
+	$gBitSystem->display( 'bitpackage:pigeonholes/edit_pigeonholes.tpl', KernelTools::tra( 'Create Pigeonhole' ) , [ 'display_mode' => 'edit' ]);
 }

@@ -16,6 +16,7 @@
 /**
  * required setup
  */
+use Bitweaver\KernelTools;
 require_once '../kernel/includes/setup_inc.php';
 
 $gBitSystem->verifyPackage( 'pigeonholes' );
@@ -43,16 +44,16 @@ $gStructure->load();
 if( !empty( $_REQUEST['action'] ) ) {
 	if( $_REQUEST['action'] == 'dismember' && !empty( $_REQUEST['content_id'] ) && !empty( $_REQUEST['parent_id'] ) && $gContent->verifyUpdatePermission() ) {
 		if( $gContent->expungePigeonholeMember( [ 'parent_id' => $_REQUEST['content_id'], 'member_id' => $_REQUEST['parent_id'] ] ) ) {
-			$feedback['success'] = tra( 'The item was successfully removed' );
+			$feedback['success'] = KernelTools::tra( 'The item was successfully removed' );
 		} else {
-			$feedback['error'] = tra( 'The item could not be removed' );
+			$feedback['error'] = KernelTools::tra( 'The item could not be removed' );
 		}
 	}
 }
 
 // confirm that structure is valid
 if( empty( $gStructure ) || !$gStructure->isValid() ) {
-	$gBitSystem->fatalError( tra( 'Invalid structure' ));
+	$gBitSystem->fatalError( KernelTools::tra( 'Invalid structure' ));
 }
 
 $gBitSmarty->assign( 'gStructure', $gStructure );
@@ -71,10 +72,10 @@ if( $gContent->checkPathPermissions( $gContent->getField( 'path' ) ) ) {
 	$pigeonList = $gContent->getList( $listHash );
 	$gBitSmarty->assign( 'pigeonList', $pigeonList );
 } else {
-	$memberFeedback['warning'] = tra( "You do not have the required permissions to view the content of this category" );
+	$memberFeedback['warning'] = KernelTools::tra( "You do not have the required permissions to view the content of this category" );
 }
 
 $gContent->addHit();
 // Display the template
-$gBitSystem->display( 'bitpackage:pigeonholes/view_structure.tpl', tra( 'View Pigeonhole' ) , [ 'display_mode' => 'display' ]);
+$gBitSystem->display( 'bitpackage:pigeonholes/view_structure.tpl', KernelTools::tra( 'View Pigeonhole' ) , [ 'display_mode' => 'display' ]);
 ?>
