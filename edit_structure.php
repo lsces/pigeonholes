@@ -22,8 +22,8 @@ $gBitSystem->verifyPackage( 'pigeonholes' );
 $gBitSystem->verifyPermission( 'p_pigeonholes_create' );
 
 // we need to load some javascript and css for this page
-$gBitThemes->loadCss( UTIL_PKG_PATH.'javascript/libs/mygosu/DynamicTree.css' );
-$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/libs/mygosu/DynamicTreeBuilder.js' );
+$gBitThemes->loadCss( PIGEONHOLES_PKG_PATH.'scripts/DynamicTree.css' );
+$gBitThemes->loadJavascript( PIGEONHOLES_PKG_PATH.'scripts/DynamicTreeBuilder.js' );
 
 include_once PIGEONHOLES_PKG_INCLUDE_PATH.'lookup_pigeonholes_inc.php';
 
