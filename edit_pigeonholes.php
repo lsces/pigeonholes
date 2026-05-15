@@ -109,7 +109,7 @@ if( !empty( $_REQUEST['success'] ) ) {
 
 // get all available perms only when the admin is visiting here.
 if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
-	$tmpPerms = $gBitUser->isAdmin() ? $gBitUser->getGroupPermissions() : $gBitUser->mPerms;
+	$tmpPerms = $gBitUser->isAdmin() ? $gBitUser->getRolePermissions() : $gBitUser->mPerms;
 
 	$perms[''] = KernelTools::tra( 'None' );
 	foreach( $tmpPerms as $perm => $info ) {
@@ -118,21 +118,6 @@ if ( $gBitSystem->isFeatureActive( 'pigeonholes_permissions' ) ) {
 	$gBitSmarty->assign( 'perms', $perms );
 }
 
-// get available groups ready that we can assign the pigoenhole to one of them
-if ( $gBitSystem->isFeatureActive( 'pigeonholes_groups' ) ) {
-	$listHash = [
-		'only_root_groups' => true,
-		'sort_mode' => !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'group_name_asc',
-	];
-	$allGroups = $gBitUser->getAllGroups( $listHash );
-
-	// create a usable array for group selection
-	$groups[0] = KernelTools::tra( 'None' );
-	foreach( $allGroups as $group ) {
-		$groups[$group['group_id']] = $group['group_name'];
-	}
-	$gBitSmarty->assign( 'groups', $groups );
-}
 
 $listHash = [
 	'root_structure_id' => !empty( $gContent->mInfo['root_structure_id'] ) ? $gContent->mInfo['root_structure_id'] : null,
