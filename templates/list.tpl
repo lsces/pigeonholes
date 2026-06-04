@@ -17,7 +17,7 @@
 		{minifind}
 		<div class="navbar">
 			<ul>
-				<li>{booticon iname="icon-circle-arrow-right"  ipackage="icons"  iexplain=sort}</li>
+				<li>{biticon ipackage="icons" iname="go-next"  ipackage="icons"  iexplain=sort}</li>
 				<li>{smartlink ititle="Title" isort=title idefault=1 icontrol=$listInfo}</li>
 				<li>{smartlink ititle="Description" isort=data icontrol=$listInfo}</li>
 			</ul>
@@ -29,10 +29,10 @@
 		{foreach from=$pigeonList item=item}
 			{if $gBitUser->hasPermission( 'p_pigeonholes_update' )}
 				<div class="floaticon">
-					{smartlink ititle="Change Structure" ifile="edit_structure.php" booticon="icon-recycle" structure_id=$item.structure_id}
-					{smartlink ititle="Insert new Category" ifile="edit_pigeonholes.php" booticon="icon-file" structure_id=$item.structure_id action="create"}
-					{smartlink ititle="Edit Category" ifile="edit_pigeonholes.php" booticon="icon-edit" structure_id=$item.structure_id action="edit"}
-					{smartlink ititle="Remove Category" ifile="edit_pigeonholes.php" booticon="icon-trash" action="remove" structure_id=$item.structure_id}
+					{smartlink ititle="Change Structure" ifile="edit_structure.php" biticon="edit-clear" structure_id=$item.structure_id}
+					{smartlink ititle="Insert new Category" ifile="edit_pigeonholes.php" biticon="text-x-generic" structure_id=$item.structure_id action="create"}
+					{smartlink ititle="Edit Category" ifile="edit_pigeonholes.php" biticon="document-properties" structure_id=$item.structure_id action="edit"}
+					{smartlink ititle="Remove Category" ifile="edit_pigeonholes.php" biticon="edit-delete" action="remove" structure_id=$item.structure_id}
 				</div>
 			{/if}
 			<h2>{$item.display_link}</h2>
