@@ -19,7 +19,7 @@
 	{/if}
 
 	{if $gBitUser->hasPermission( 'p_pigeonholes_insert_member' )}
-		<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}assign_content.php">{biticon ipackage="icons" iname="mail-attachment" iexplain="Assign Content" ilocation=menu}</a></li>
+		<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}assign_content.php">{biticon ipackage="icons" iname="stock_attach" iexplain="Assign Content" ilocation=menu}</a></li>
 	{/if}
 </ul>
 {/strip}
