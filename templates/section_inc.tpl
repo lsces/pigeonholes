@@ -57,8 +57,8 @@
 	{* ======= very basic display of the pigoenhole structure ======= *}
 	{if !$no_edit  && $gBitUser->hasPermission( 'p_pigeonholes_update' )}
 		<div class="floaticon">
-			{smartlink ititle="Insert new Category" ifile="edit_pigeonholes.php" biticon="text-x-generic" structure_id=$subtree[ix].structure_id action=create}
-			{smartlink ititle="Edit Category" biticon="document-properties" ifile="edit_pigeonholes.php" structure_id=$subtree[ix].structure_id action=edit}
+			{smartlink ititle="Insert new Category" ifile="edit_pigeonholes.php" biticon="view-list-text" structure_id=$subtree[ix].structure_id action=create}
+			{smartlink ititle="Edit Category" biticon="edit" ifile="edit_pigeonholes.php" structure_id=$subtree[ix].structure_id action=edit}
 			{smartlink ititle="Remove Category" biticon="user-trash" ifile="edit_pigeonholes.php" structure_id=$subtree[ix].structure_id action=remove}
 		</div>
 	{/if}
