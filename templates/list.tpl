@@ -32,7 +32,7 @@
 					{smartlink ititle="Change Structure" ifile="edit_structure.php" biticon="edit-clear" structure_id=$item.structure_id}
 					{smartlink ititle="Insert new Category" ifile="edit_pigeonholes.php" biticon="text-x-generic" structure_id=$item.structure_id action="create"}
 					{smartlink ititle="Edit Category" ifile="edit_pigeonholes.php" biticon="document-properties" structure_id=$item.structure_id action="edit"}
-					{smartlink ititle="Remove Category" ifile="edit_pigeonholes.php" biticon="edit-delete" action="remove" structure_id=$item.structure_id}
+					{smartlink ititle="Remove Category" ifile="edit_pigeonholes.php" biticon="user-trash" action="remove" structure_id=$item.structure_id}
 				</div>
 			{/if}
 			<h2>{$item.display_link}</h2>

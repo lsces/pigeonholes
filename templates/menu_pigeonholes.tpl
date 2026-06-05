@@ -13,7 +13,7 @@
 				<li><a class="head" href="{$smarty.const.PIGEONHOLES_PKG_URL}edit_pigeonholes.php?structure_id={$gContent->getField('structure_id')}&amp;action=edit">{biticon ipackage="icons" iname="document-properties"   iexplain="Edit Category" ilocation=menu}</a></li>
 				<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}edit_pigeonholes.php?structure_id={$gContent->getField('root_structure_id')}&amp;action=create">{biticon iname="insert-object" iexplain="Insert Sub-Category" ilocation=menu}</a></li>
 				<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}edit_structure.php?structure_id={$gContent->getField('structure_id')}">{biticon ipackage="icons" iname="edit-clear"   iexplain="Change Structure" ilocation=menu}</a></li>
-				<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}edit_pigeonholes.php?structure_id={$gContent->getField('structure_id')}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Delete Category" ilocation=menu}</a></li>
+				<li><a class="item" href="{$smarty.const.PIGEONHOLES_PKG_URL}edit_pigeonholes.php?structure_id={$gContent->getField('structure_id')}&amp;action=remove">{biticon ipackage="icons" iname="user-trash" iexplain="Delete Category" ilocation=menu}</a></li>
 			{/if}
 		{/if}
 	{/if}
